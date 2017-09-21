@@ -3,6 +3,8 @@ from get_json_from_url import get_json_from_url
 from build_matrix import build_term_doc_matrix
 
 np.set_printoptions(precision=3, linewidth=150)
+np.set_printoptions(threshold=np.nan)
+
 
 if __name__ == '__main__':
     query = raw_input("Please enter your query: ")
