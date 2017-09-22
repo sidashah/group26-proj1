@@ -11,7 +11,7 @@ def build_term_doc_matrix(documents):
     for count, term in enumerate(words):
         index_to_term[count] = term
         term_to_index[term] = count
-    result = normalize(X).toarray()
+    result = normalize(X.astype(float)).toarray()
     result_transpose = np.transpose(result)
     answer = result_transpose.dot(result)
     return answer, index_to_term, term_to_index
