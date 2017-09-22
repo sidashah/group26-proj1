@@ -8,10 +8,10 @@ np.set_printoptions(threshold=np.nan)
 
 
 if __name__ == '__main__':
-    google_api_key = str(sys.argv[0])
-    search_engine_id = str(sys.argv[1])
-    precision_required = float(sys.argv[2])
-    query = str(sys.argv[3])
+    google_api_key = str(sys.argv[1])
+    search_engine_id = str(sys.argv[2])
+    precision_required = float(sys.argv[3])
+    query = str(sys.argv[4])
 
     if precision_required < 0 or precision_required > 1:
         print "Enter correct precision"
@@ -25,7 +25,7 @@ if __name__ == '__main__':
     while True:
         num_iteration += 1
         print "Query: "+ augmented_query
-        parameters = { "q" : query, "cx" : search_engine_id, "key" : google_api_key}
+        parameters = { "q" : augmented_query, "cx" : search_engine_id, "key" : google_api_key}
         json_data = get_json_from_url("https://www.googleapis.com/customsearch/v1", parameters)
         search_count = json_data['queries']['request'][0]['count']
         if num_iteration == 1 and search_count != 10:
@@ -45,7 +45,7 @@ if __name__ == '__main__':
                 precision += 1
             i += 1
 
-        if precision / search_count > precision_required:
+        if precision / search_count >= precision_required:
             # done - end the program
             print "Precision reached" + precision / search_count
             break
