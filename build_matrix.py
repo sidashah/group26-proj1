@@ -2,8 +2,8 @@ from sklearn.feature_extraction.text import CountVectorizer
 from sklearn.preprocessing import normalize
 from stop_words import get_stop_words
 import numpy as np
-def build_term_doc_matrix(documents):
-    vectorizer = CountVectorizer(stop_words=get_stop_words())
+def build_term_doc_matrix(documents, query):
+    vectorizer = CountVectorizer(stop_words=get_stop_words(query))
     X = vectorizer.fit_transform(documents)
     words = vectorizer.get_feature_names()
     index_to_term = {}
