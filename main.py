@@ -1,14 +1,22 @@
 import numpy as np
 from get_json_from_url import get_json_from_url
 from build_matrix import build_term_doc_matrix
+import sys
 
 np.set_printoptions(precision=3, linewidth=150)
 np.set_printoptions(threshold=np.nan)
 
 
 if __name__ == '__main__':
-    query = raw_input("Please enter your query: ")
-    precision_required = float(raw_input("Precision required:"))
+    google_api_key = str(sys.argv[0])
+    search_engine_id = str(sys.argv[1])
+    precision_required = float(sys.argv[2])
+    query = str(sys.argv[3])
+
+    if precision_required < 0 or precision_required > 1:
+        print "Enter correct precision"
+        sys.exit()
+
     augmented_query = query
 
     # Iterations
@@ -17,7 +25,8 @@ if __name__ == '__main__':
     while True:
         num_iteration += 1
         print "Query: "+ augmented_query
-        json_data = get_json_from_url('http://siddharthshah.in/jaguar.txt')
+        parameters = { "q" : query, "cx" : search_engine_id, "key" : google_api_key}
+        json_data = get_json_from_url("https://www.googleapis.com/customsearch/v1", parameters)
         search_count = json_data['queries']['request'][0]['count']
         if num_iteration == 1 and search_count != 10:
             break
