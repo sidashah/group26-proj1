@@ -57,7 +57,7 @@ if __name__ == '__main__':
                 relevant_results.append(item['title'] + ' ' + item['snippet'])
             i += 1
 
-        term_doc_matrix, index_to_term, term_to_index = build_term_doc_matrix(relevant_results)
+        term_doc_matrix, index_to_term, term_to_index = build_term_doc_matrix(relevant_results, query)
         query_word_set = set()
         for word in augmented_query.split(" "):
             query_word_set.add(term_to_index[word])
