@@ -1,6 +1,7 @@
 import numpy as np
 from get_json_from_url import get_json_from_url
 from build_matrix import build_term_doc_matrix
+from term_ordering import get_max_frequency_ordering
 import sys
 
 np.set_printoptions(precision=3, linewidth=150)
