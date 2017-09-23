@@ -47,7 +47,10 @@ if __name__ == '__main__':
 
         if precision / search_count >= precision_required:
             # done - end the program
-            print "Precision reached" + precision / search_count
+            print "Precision reached" + str(precision / search_count)
+            break
+        elif precision == 0:
+            print "No search results matched"
             break
 
         relevant_results = []
@@ -62,13 +65,21 @@ if __name__ == '__main__':
         for word in augmented_query.split(" "):
             query_word_set.add(term_to_index[word])
 
-        max_query_row = term_doc_matrix[term_to_index[query]]
+        max_query_table = np.empty((0, term_doc_matrix.shape[1]), float)
+        print max_query_table.shape
+        for term in query.split(" "):
+            max_query_row = term_doc_matrix[term_to_index[term]].reshape((1,term_doc_matrix.shape[1]))
+            print max_query_row.shape
+            max_query_table = np.concatenate((max_query_table, max_query_row), axis=0)
+
+        print max_query_table
         while len(query_word_set) < 1 + (2 * num_iteration):
-            index_of_max = np.argmax(term_doc_matrix[term_to_index[query]])
-            if index_of_max not in query_word_set:
-                query_word_set.add(index_of_max)
-                augmented_query += " " + index_to_term[index_of_max]
-            max_query_row[index_of_max] = 0
+            row_of_max = np.argmax(max_query_table) / max_query_table.shape[1]
+            col_of_max = np.argmax(max_query_table) % max_query_table.shape[1]
+            if col_of_max not in query_word_set:
+                query_word_set.add(col_of_max)
+                augmented_query += " " + index_to_term[col_of_max]
+            max_query_table[row_of_max][col_of_max] = 0
         print "Aug Query: " + augmented_query
 
     print "Original query: " + query
