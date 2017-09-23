@@ -12,6 +12,7 @@ if __name__ == '__main__':
     search_engine_id = str(sys.argv[2])
     precision_required = float(sys.argv[3])
     query = str(sys.argv[4])
+    query_words = len(query.split(" "))
 
     if precision_required < 0 or precision_required > 1:
         print "Enter correct precision"
@@ -66,14 +67,11 @@ if __name__ == '__main__':
             query_word_set.add(term_to_index[word])
 
         max_query_table = np.empty((0, term_doc_matrix.shape[1]), float)
-        print max_query_table.shape
         for term in query.split(" "):
             max_query_row = term_doc_matrix[term_to_index[term]].reshape((1,term_doc_matrix.shape[1]))
-            print max_query_row.shape
             max_query_table = np.concatenate((max_query_table, max_query_row), axis=0)
 
-        print max_query_table
-        while len(query_word_set) < 1 + (2 * num_iteration):
+        while len(augmented_query.split(" ")) < query_words + (2 * num_iteration):
             row_of_max = np.argmax(max_query_table) / max_query_table.shape[1]
             col_of_max = np.argmax(max_query_table) % max_query_table.shape[1]
             if col_of_max not in query_word_set:
