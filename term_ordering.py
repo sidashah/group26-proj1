@@ -12,7 +12,7 @@ def get_max_frequency_ordering(documents, query, term1, term2):
         search_string = " ".join(perm)
         temp_frequency = 0
         for doc in documents:
-            temp_frequency += doc.count(perm)
+            temp_frequency += doc.count(search_string)
         if temp_frequency > max_frequency:
             max_frequency = temp_frequency
             final_query_string = search_string
