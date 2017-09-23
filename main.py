@@ -59,11 +59,12 @@ if __name__ == '__main__':
         i = 0
         for item in json_data['items']:
             if result_feedback[i]:
-                relevant_results.append(item['title'] + ' ' + item['snippet'])
+                relevant_results.append(item['title'].lower() + ' ' + item['snippet'].lower())
             i += 1
 
         term_doc_matrix, index_to_term, term_to_index = build_term_doc_matrix(relevant_results, query)
         query_word_set = set()
+        new_words = []
         for word in augmented_query.split(" "):
             query_word_set.add(term_to_index[word])
 
@@ -72,13 +73,16 @@ if __name__ == '__main__':
             max_query_row = term_doc_matrix[term_to_index[term]].reshape((1,term_doc_matrix.shape[1]))
             max_query_table = np.concatenate((max_query_table, max_query_row), axis=0)
 
-        while len(augmented_query.split(" ")) < query_words + (2 * num_iteration):
+        while len(augmented_query.split(" ")) + len(new_words) < query_words + (2 * num_iteration):
             row_of_max = np.argmax(max_query_table) / max_query_table.shape[1]
             col_of_max = np.argmax(max_query_table) % max_query_table.shape[1]
             if col_of_max not in query_word_set:
                 query_word_set.add(col_of_max)
-                augmented_query += " " + index_to_term[col_of_max]
+                new_words.append(index_to_term[col_of_max])
             max_query_table[row_of_max][col_of_max] = 0
+
+        augmented_query = get_max_frequency_ordering(relevant_results, augmented_query, new_words[0], new_words[1])
+
         print "Aug Query: " + augmented_query
 
     print "Original query: " + query
