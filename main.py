@@ -25,6 +25,12 @@ if __name__ == '__main__':
     # use query, engine id and API Key to make call on Google Custom Search
     num_iteration = 0
     while True:
+        print "Parameters:"
+        print "Client Key =  {}".format(google_api_key)
+        print "Engine Key =  {}".format(search_engine_id)
+        print "Query      =  {}".format(augmented_query)
+        print "Precision  =  {}".format(precision_required)
+
         num_iteration += 1
         print "Query: "+ augmented_query
         parameters = { "q" : augmented_query, "cx" : search_engine_id, "key" : google_api_key}
@@ -49,7 +55,8 @@ if __name__ == '__main__':
 
         if precision / search_count >= precision_required:
             # done - end the program
-            print "Precision reached" + str(precision / search_count)
+            print "Precision {}".format(precision/search_count)
+            print "Desired precision reached, done"
             break
         elif precision == 0:
             print "No search results matched"
@@ -80,9 +87,14 @@ if __name__ == '__main__':
                 query_word_set.add(col_of_max)
                 new_words.append(index_to_term[col_of_max])
             max_query_table[row_of_max][col_of_max] = 0
+        print "======================="
+        print "FEEDBACK SUMMARY"
+        print "Query {}".format(augmented_query)
+        print "Precision {}".format(precision/search_count)
+        print "Still below the desired precision of {}".format(precision_required)
+
+        print "Augmenting by {} {}".format(new_words[0],new_words[1])
 
         augmented_query = get_max_frequency_ordering(relevant_results, augmented_query, new_words[0], new_words[1])
 
-        print "Aug Query: " + augmented_query
 
-    print "Original query: " + query
