@@ -16,7 +16,7 @@ if __name__ == '__main__':
     query_words = len(query.split(" "))
 
     if precision_required < 0 or precision_required > 1:
-        print "Enter correct precision"
+        print "please enter precision between 0 and 1 only."
         sys.exit()
 
     augmented_query = query
@@ -32,8 +32,7 @@ if __name__ == '__main__':
         print "Precision  =  {}".format(precision_required)
 
         num_iteration += 1
-        print "Query: "+ augmented_query
-        parameters = { "q" : augmented_query, "cx" : search_engine_id, "key" : google_api_key}
+        parameters = {"q" : augmented_query, "cx" : search_engine_id, "key" : google_api_key}
         json_data = get_json_from_url("https://www.googleapis.com/customsearch/v1", parameters)
         search_count = json_data['queries']['request'][0]['count']
         if num_iteration == 1 and search_count != 10:
@@ -41,25 +40,30 @@ if __name__ == '__main__':
         result_feedback = [False] * search_count
         # display results to user and get feedback
         i = 0
-        precision = 0
+        precision_count = 0
+        result_number = 0
         for item in json_data['items']:
-            print '\nTitle: ' + item['title']
+            result_number += 1
+            print "\nResult {}".format(result_number)
+            print 'URL: '+ item['link']
+            print 'Title: ' + item['title']
             print 'Snippet: '+ item['snippet']
-            user_feedback = raw_input("Is this relevant?(Y/N): ")
+            user_feedback = raw_input("\nIs this relevant?(Y/N): ")
             while user_feedback not in ['Y', 'y', 'N', 'n']:
                 user_feedback = raw_input("Please answer in terms of 'Y' or 'N': ")
             if user_feedback in ['Y', 'y']:
                 result_feedback[i] = True
-                precision += 1
+                precision_count += 1
             i += 1
 
-        if precision / search_count >= precision_required:
+        if precision_count / search_count >= precision_required:
             # done - end the program
-            print "Precision {}".format(precision/search_count)
-            print "Desired precision reached, done"
+            print "Precision {}".format(float(precision_count)/search_count)
+            print "Desired precision reached, done."
             break
-        elif precision == 0:
-            print "No search results matched"
+        elif precision_count == 0:
+            print "Precision {}".format(float(precision_count)/search_count)
+            print "No search results matched. Quitting."
             break
 
         relevant_results = []
@@ -77,7 +81,7 @@ if __name__ == '__main__':
 
         max_query_table = np.empty((0, term_doc_matrix.shape[1]), float)
         for term in query.split(" "):
-            max_query_row = term_doc_matrix[term_to_index[term]].reshape((1,term_doc_matrix.shape[1]))
+            max_query_row = term_doc_matrix[term_to_index[term]].reshape((1, term_doc_matrix.shape[1]))
             max_query_table = np.concatenate((max_query_table, max_query_row), axis=0)
 
         while len(augmented_query.split(" ")) + len(new_words) < query_words + (2 * num_iteration):
@@ -90,10 +94,10 @@ if __name__ == '__main__':
         print "======================="
         print "FEEDBACK SUMMARY"
         print "Query {}".format(augmented_query)
-        print "Precision {}".format(precision/search_count)
+        print "Precision {}".format(float(precision_count)/search_count)
         print "Still below the desired precision of {}".format(precision_required)
 
-        print "Augmenting by {} {}".format(new_words[0],new_words[1])
+        print "Augmenting by {} {}".format(new_words[0], new_words[1])
 
         augmented_query = get_max_frequency_ordering(relevant_results, augmented_query, new_words[0], new_words[1])
 
