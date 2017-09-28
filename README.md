@@ -14,6 +14,7 @@
 
 # How to run the program
 ## Install dependencies
+`sudo apt-get install python-pip`
 `sudo pip install -r requirements.txt`
 
 ## Run the program
