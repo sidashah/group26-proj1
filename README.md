@@ -14,7 +14,7 @@
 
 # How to run the program
 ## Install dependencies
-`pip install -r requirements.txt`
+`sudo pip install -r requirements.txt`
 
 ## Run the program
 `python main.py A B C`
