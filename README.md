@@ -13,8 +13,9 @@
 - README
 
 # How to run the program
-## Install dependencies
+## Install dependencies (if you don't have them already installed)
 `sudo apt-get install python-pip`    
+`sudo apt-get install python-dev`    
 `sudo pip install -r requirements.txt`
 
 ## Run the program
