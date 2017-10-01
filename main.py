@@ -102,10 +102,10 @@ if __name__ == '__main__':
         term_matrix, index_to_term, term_to_index = build_term_matrix(relevant_results, query)
 
         # Create a set of words in query to eliminate duplicacy while augmenting new word
-        query_word_set = set()
+        aug_query_word_set = set()
         new_words = []
         for word in augmented_query.split(" "):
-            query_word_set.add(term_to_index[word])
+            aug_query_word_set.add(term_to_index[word])
 
         # Getting rows from the term matrix for the words in the original query
         max_query_table = np.empty((0, term_matrix.shape[1]), float)
@@ -122,9 +122,12 @@ if __name__ == '__main__':
             row_of_max = np.argmax(max_query_table) / max_query_table.shape[1]
             col_of_max = np.argmax(max_query_table) % max_query_table.shape[1]
             # checking if the word is already in the augmented query words 
-            if col_of_max not in query_word_set:
-                query_word_set.add(col_of_max)
+            if col_of_max not in aug_query_word_set:
+                # adding new word to the query set
+                aug_query_word_set.add(col_of_max)
                 new_words.append(index_to_term[col_of_max])
+            # marking that position as zero so that we can find
+            # the other maximum values in the numpy array
             max_query_table[row_of_max][col_of_max] = 0
 
         # Printing Feedback Summary
