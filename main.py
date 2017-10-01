@@ -116,8 +116,12 @@ if __name__ == '__main__':
         # Getting 2 new words from the relevant docs having highest
         # relevance with the terms in the query
         while len(augmented_query.split(" ")) + len(new_words) < query_words_len + (2 * num_iteration):
+            # argmax returns indice of maximum value inside numpy array
+            # shape[1] is the number of columns in the numpy array
+            # getting row and column of the word having max relevance with the query words
             row_of_max = np.argmax(max_query_table) / max_query_table.shape[1]
             col_of_max = np.argmax(max_query_table) % max_query_table.shape[1]
+            # checking if the word is already in the augmented query words 
             if col_of_max not in query_word_set:
                 query_word_set.add(col_of_max)
                 new_words.append(index_to_term[col_of_max])
