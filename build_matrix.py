@@ -21,14 +21,14 @@ def build_term_matrix(documents, query):
 
     """
     vectorizer = CountVectorizer(stop_words=get_stop_words(query))
-    term_doc_matrix = vectorizer.fit_transform(documents) # Learn the vocabulary dictionary and return term-document matrix.
+    doc_term_matrix = vectorizer.fit_transform(documents) # Learn the vocabulary dictionary and return document-term matrix.
     words = vectorizer.get_feature_names() # Array mapping from feature integer indices to feature name
     index_to_term = {}
     term_to_index = {}
     for count, term in enumerate(words):
         index_to_term[count] = term
         term_to_index[term] = count
-    result = normalize(term_doc_matrix.astype(float)).toarray()
+    result = normalize(doc_term_matrix.astype(float)).toarray()
     result_transpose = np.transpose(result)
     answer = result_transpose.dot(result)
     return answer, index_to_term, term_to_index
